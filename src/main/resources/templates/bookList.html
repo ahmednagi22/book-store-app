@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Book Store</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">📚 Book Store</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="available_books">Available Books</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">My Books</a></li>
+            </ul>
+            <a class="btn btn-outline-light" href="book_register">➕ Add New Book</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">📖 Available Books</h2>
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">📌 ID</th>
+                <th scope="col">📖 Title</th>
+                <th scope="col">✍️ Author</th>
+                <th scope="col">💰 Price</th>
+                <th scope="col">📦 Stock</th>
+                <th scope="col">📥 Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${book}">
+                <td th:text="${b.id}"></td>
+                <td th:text="${b.title}"></td>
+                <td th:text="${b.author}"></td>
+                <td th:text="'$' + ${b.price}"></td>
+                <td th:text="${b.stockQuantity}"></td>
+                <td>
+                    <a href="#" class="btn btn-primary btn-sm">➕ Add To My Books</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

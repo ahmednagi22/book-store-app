@@ -25,5 +25,5 @@ public class User {
     private String fullName;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.CUSTOMER;//default is customer
 }

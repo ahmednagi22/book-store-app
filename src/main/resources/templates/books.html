@@ -16,10 +16,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="available_books">Available Books</a></li>
+                <li class="nav-item"><a class="nav-link" href="books">Available Books</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">My Books</a></li>
             </ul>
-            <a class="btn btn-outline-light" href="book_register">➕ Add New Book</a>
+            <a class="btn btn-outline-light" href="book_form">➕ Add New Book</a>
         </div>
     </div>
 </nav>
@@ -39,7 +39,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="b : ${book}">
+            <tr th:each="b : ${books}">
                 <td th:text="${b.id}"></td>
                 <td th:text="${b.title}"></td>
                 <td th:text="${b.author}"></td>

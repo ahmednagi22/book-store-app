@@ -4,6 +4,7 @@ import com.bookstore.entity.Book;
 import com.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,23 +22,26 @@ public class BookController {
         return "home";
     }
 
-    @GetMapping("/book_register")
+    @GetMapping("/book_form")
     public String bookRegister(){
-        return "bookRegister";
+        return "book_form";
     }
 
-    @GetMapping("/available_books")
-    public ModelAndView getAllBook(){
+    @GetMapping("/books")
+    public String getAllBook(Model model){
         List<Book> list = bookService.getAllBooks();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("bookList");
-        modelAndView.addObject("book",list);
-        return modelAndView;
+        model.addAttribute("books", list);
+        return "books";
     }
 
     @PostMapping("/save")
     public String addBook(@ModelAttribute Book book){
         bookService.save(book);
-        return "redirect:/available_books";
+        return "redirect:/books";
     }
+
+//    @GetMapping("/my_books")
+//    public ModelAndView getMyBooks(){
+//        return "myBooks";
+//    }
 }

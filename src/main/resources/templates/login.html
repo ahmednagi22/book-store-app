@@ -39,20 +39,32 @@
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
     <div class="col-md-5 form-container">
-        <h4 class="text-center mb-4">Login to Your Account</h4>
-        <form th:action="@{/login}" method="post">
+        <h4 class="text-center mb-4">Login</h4>
+        <div th:if="${loginError}" class="alert alert-danger text-center">
+            <span th:text="${loginError}"></span>
+        </div>
+        <div th:if="${logoutMsg}" class="alert alert-info text-center">
+            <span th:text="${logoutMsg}"></span>
+        </div>
+        <div th:if="${regMsg}" class="alert alert-success text-center">
+            <span th:text="${regMsg}"></span>
+        </div>
+
+        <form th:action="@{/login}" th:object="${loginDto}" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="email" name="username" placeholder="example@mail.com" required>
+                <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="example@mail.com">
+                <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <div class="input-group">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Your Password" required>
+                    <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Enter Your Password">
                     <button class="btn btn-outline-secondary btn-toggle-password" type="button">
                         👁
                     </button>
                 </div>
+                <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary w-100">Login</button>

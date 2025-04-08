@@ -13,7 +13,7 @@ A simple book store application built with **Spring Boot** and **MySQL**.
 - **Backend**: Java, Spring Boot, Spring Data JPA
 - **Database**: MySQL
 - **Authentication**: Spring Security (JWT)
-- **Frontend**: React (future work)
+- **Frontend**: Thymeleaf
 
 ## 📂 System Design Overview
 ### 1️⃣ **Architecture**

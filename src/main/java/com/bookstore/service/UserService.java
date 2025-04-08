@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import com.bookstore.entity.User;
 import com.bookstore.enums.Role;
 import com.bookstore.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,10 +14,11 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-
+        this.passwordEncoder = passwordEncoder;
     }
     public void registerUser(UserDTO userDTO) throws RuntimeException{
         // Check if user already exists
@@ -28,10 +30,8 @@ public class UserService {
         User user = new User();
         user.setFullName(userDTO.getFullName());
         user.setEmail(userDTO.getEmail());
-
         // encode password using BcCrypt
-        String hashedPassword = BCrypt.hashpw(userDTO.getPassword(),BCrypt.gensalt());
-        user.setPassword(hashedPassword);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         user.setRole(Role.CUSTOMER);// default user is customer
 
@@ -46,11 +46,8 @@ public class UserService {
     public boolean authenticateUser(String email, String password){
         // get user by email
         User user = getUserByEmail(email);
-        //user doesn't exist, return false
-        if(user == null){
-            return false;
-        }
+
         // check user password with stored password
-        return BCrypt.checkpw(password,user.getPassword());
+        return passwordEncoder.matches(password,user.getPassword());
     }
 }

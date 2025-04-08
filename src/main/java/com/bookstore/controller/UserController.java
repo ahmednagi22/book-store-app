@@ -79,4 +79,9 @@ public class UserController {
         }
         return "redirect:/books";
     }
+
+    @GetMapping("/error/access-denied")
+    public String accessDenied(){
+        return "accessDenied";
+    }
 }

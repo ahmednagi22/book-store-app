@@ -2,6 +2,7 @@ package com.bookstore.controller;
 
 import com.bookstore.dto.LoginDTO;
 import com.bookstore.dto.UserDTO;
+import com.bookstore.service.JWTService;
 import com.bookstore.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,9 @@ public class UserController {
 
 
     private final UserService userService;
-
     public UserController(UserService userService) {
         this.userService = userService;
+
     }
 
     // show registration form
@@ -73,7 +74,7 @@ public class UserController {
         if(bindingResult.hasErrors()){
             return "login";
         }
-        if (!userService.authenticateUser(loginDto.getEmail(), loginDto.getPassword())) {
+        if (!userService.authenticateUser(loginDto)) {
             model.addAttribute("loginError", "Invalid email or password.");
             return "login";
         }

@@ -1,11 +1,13 @@
 package com.bookstore.service;
 
+import com.bookstore.dto.LoginDTO;
 import com.bookstore.dto.UserDTO;
-import com.bookstore.exception.UserNotFoundException;
-import org.mindrot.jbcrypt.BCrypt;
 import com.bookstore.entity.User;
 import com.bookstore.enums.Role;
 import com.bookstore.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder) {
+    public UserService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JWTService jwtService) {
+
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+
     }
     public void registerUser(UserDTO userDTO) throws RuntimeException{
         // Check if user already exists
@@ -39,15 +49,19 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUserByEmail(String email){
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-    }
-    public boolean authenticateUser(String email, String password){
-        // get user by email
-        User user = getUserByEmail(email);
+    public boolean authenticateUser(LoginDTO loginDTO){
+         // get user by email
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new UserNotFoundException("User not found"));
+//
+//        // check user password with stored password
+//        return passwordEncoder.matches(password,user.getPassword());
+        Authentication authentication =authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
+        );
 
-        // check user password with stored password
-        return passwordEncoder.matches(password,user.getPassword());
+
+        return authentication.isAuthenticated();
+
     }
 }

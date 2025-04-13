@@ -1,5 +1,6 @@
 package com.bookstore.security;
 
+import com.bookstore.security.filter.JwtFilter;
 import com.bookstore.service.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,20 +11,23 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig{
 
     private final MyUserDetailsService userDetailsService;
-
-    public SecurityConfig(MyUserDetailsService myUserDetailsService, PasswordEncoder passwordEncoder) {
+    private final JwtFilter jwtFilter;
+    public SecurityConfig(
+            MyUserDetailsService myUserDetailsService,
+            PasswordEncoder passwordEncoder,
+            JwtFilter jwtFilter) {
         this.userDetailsService = myUserDetailsService;
+        this.jwtFilter = jwtFilter;
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(customizer ->customizer.disable());
-//        http.sessionManagement(session->
-//                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(
                 authorize -> authorize
                         .requestMatchers(
@@ -32,6 +36,10 @@ public class SecurityConfig{
                                 "books").permitAll()
                         .requestMatchers("/book_form").hasRole("ADMIN")
                         .anyRequest().authenticated());
+        http.httpBasic(Customizer.withDefaults());
+        http.sessionManagement(session->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.formLogin(form ->form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")

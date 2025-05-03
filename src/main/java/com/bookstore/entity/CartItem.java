@@ -11,31 +11,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "books")
-public class Book {
+@Table(name = "CartItems")
+public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
-    @Column
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
 
-    @Column
-    private double price;
 
-    @Column
-    private String imageUrl;
+    private int quantity;
 
-    @Column
-    private String description;
-
-    @Column
-    private int stockQuantity;
-
-    @Column
-    private String category;
 }

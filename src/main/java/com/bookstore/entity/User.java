@@ -15,14 +15,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
-    @Column(nullable = false)
+    @Column
     private String fullName;
+
+    @Column
+    private String phoneNumber;
+
+    @Column
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.CUSTOMER;//default is customer

@@ -23,7 +23,10 @@ public class OrderItem {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Column(nullable = false)
+    @Column
     private int quantity;
+
+    @Column
+    private double price_at_purchase;
 
 }

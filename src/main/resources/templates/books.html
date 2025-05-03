@@ -1,56 +1,32 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Book Store</title>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">📚 Book Store</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="books">Available Books</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">My Books</a></li>
-            </ul>
-            <a class="btn btn-outline-light" href="book_form" sec:authorize="hasRole('ADMIN')">➕ Add New Book</a>
-        </div>
-    </div>
-</nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/header :: head}"></head>
 
-<div class="container my-5">
-    <h2 class="text-center mb-4">📖 Available Books</h2>
-    <div class="table-responsive">
-        <table class="table table-hover text-center">
-            <thead class="table-dark">
-            <tr>
-                <th scope="col">📌 ID</th>
-                <th scope="col">📖 Title</th>
-                <th scope="col">✍️ Author</th>
-                <th scope="col">💰 Price</th>
-                <th scope="col">📦 Stock</th>
-                <th scope="col">📥 Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="b : ${books}">
-                <td th:text="${b.id}"></td>
-                <td th:text="${b.title}"></td>
-                <td th:text="${b.author}"></td>
-                <td th:text="'$' + ${b.price}"></td>
-                <td th:text="${b.stockQuantity}"></td>
-                <td>
-                    <a href="#" class="btn btn-primary btn-sm">➕ Add To My Books</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<body>
+<div th:replace="~{fragments/header :: body}"></div>
+
+<div class="container py-5">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="col" th:each="book : ${books}">
+            <div class="card h-100 bg-dark text-white border-secondary">
+                <a th:href="@{/books/{id}(id=${book.id})}" class="text-decoration-none">
+                    <img th:src="@{${book.imageUrl}}" class="card-img-top" alt="Book cover"
+                         style="height: 300px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title text-decoration-none" th:text="${book.title}">Book Title</h5>
+                        <p class="card-text text-decoration-none" th:text="'by ' + ${book.author}">by Author</p>
+                        <p class="card-text fw-bold text-decoration-none" th:text="'$ ' + ${book.price}">$ 999</p>
+                    </div>
+                </a>
+                <div class="card-footer bg-transparent border-0">
+                    <form th:action="@{/cart/add}" method="post">
+                        <input type="hidden" name="bookId" th:value="${book.id}" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button type="submit" class="btn btn-success btn-sm" sec:authorize="isAuthenticated()">Add To Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

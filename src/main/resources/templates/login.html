@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
-<head>
+<head th:replace="~{fragments/header :: head}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,23 +22,10 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="/">📚 Book Store</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/books">All Books</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="~{fragments/header :: body}"></div>
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-    <div class="col-md-5 form-container">
+    <div class="col-md-4 form-container">
         <h4 class="text-center mb-4">Login</h4>
         <div th:if="${loginError}" class="alert alert-danger text-center">
             <span th:text="${loginError}"></span>
@@ -60,9 +47,6 @@
                 <label for="password" class="form-label">Password</label>
                 <div class="input-group">
                     <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Enter Your Password">
-                    <button class="btn btn-outline-secondary btn-toggle-password" type="button">
-                        👁
-                    </button>
                 </div>
                 <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
             </div>
@@ -75,12 +59,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.querySelector(".btn-toggle-password").addEventListener("click", function () {
-        let passwordInput = document.getElementById("password");
-        passwordInput.type = passwordInput.type === "password" ? "text" : "password";
-    });
-</script>
 
 </body>
 </html>

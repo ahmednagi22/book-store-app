@@ -10,8 +10,11 @@ import java.util.List;
 @Service
 public class BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+
+    public BookService(BookRepository bookRepository){
+        this.bookRepository = bookRepository;
+    }
 
     public void save(Book book){
         bookRepository.save(book);
@@ -19,5 +22,9 @@ public class BookService {
 
     public List<Book> getAllBooks(){
         return bookRepository.findAll();
+    }
+
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
     }
 }

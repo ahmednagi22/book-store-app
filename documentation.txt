@@ -1,0 +1,17 @@
+							Book Store
+
+Register/Login
+
+🟢 Register
+Goal: User creates an account.
+
+Request: Email, password, full name, phoneNumber, address
+
+Response: Success message or user data (no password)
+
+🔵 Login
+Goal: User logs in with credentials.
+
+Request: Email, password
+
+Response: JWT token (or session) + basic user info

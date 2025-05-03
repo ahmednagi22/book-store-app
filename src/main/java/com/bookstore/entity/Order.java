@@ -28,9 +28,15 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // PENDING, SHIPPED, DELIVERED
+
+    @Column
+    private double total_price;
+
+    @Column
+    private String shippingAddress ;
 }

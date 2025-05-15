@@ -15,3 +15,18 @@ Goal: User logs in with credentials.
 Request: Email, password
 
 Response: JWT token (or session) + basic user info
+
+
+
+1. Define the Core Features
+User Registration & Login (Authentication)
+
+View list of books
+
+View book details
+
+Add to cart
+
+Checkout (purchase)
+
+Admin panel: Add, edit, delete books

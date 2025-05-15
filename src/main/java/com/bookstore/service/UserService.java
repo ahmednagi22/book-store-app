@@ -28,8 +28,11 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id)
+        User User = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+        // mapped user to
+        return User;
+
     }
 
 

@@ -1,12 +1,18 @@
 package com.bookstore.security;
 
 //import com.bookstore.service.MyUserDetailsService;
+import com.bookstore.enums.Role;
+import com.bookstore.service.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,61 +20,38 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig{
 
-   // private final MyUserDetailsService userDetailsService;
+    private final MyUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(/*MyUserDetailsService myUserDetailsService,*/ PasswordEncoder passwordEncoder) {
-        /*this.userDetailsService = myUserDetailsService;*/
+    public SecurityConfig(MyUserDetailsService userDetailsService,PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http.csrf(customizer ->customizer.disable());
-//        http.sessionManagement(session->
-//                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.authorizeHttpRequests(
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
                 authorize -> authorize
+                        .requestMatchers("/users","/users/**","/book_form").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(
-                                "/", "/home1", "/api/auth/register",
-                                "/login", "/css/**", "/images/**",
-                                "books","/books/**","users","/users/**",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/swagger-ui/index.html",
-                                "/swagger-ui/swagger-initializer.js", "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/api-docs",
-                                "/api-docs/**",
-
-                                // Swagger Resources
-                                "/swagger-resources",
-                                "/swagger-resources/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-
-                                // WebJars (for Swagger UI assets)
-                                "/**").permitAll()
-                        .requestMatchers("/book_form").hasRole("ADMIN")
-                        .anyRequest().permitAll());
-        http.formLogin(form ->form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .usernameParameter("email")
-                .defaultSuccessUrl("/home",true)
-                .failureUrl("/login?error")
-                .permitAll()
-
-        );// Uses default login page
+                        "/api/auth/register"
+                                ,"/api/auth/login").permitAll()
+        );
+        http.httpBasic(Customizer.withDefaults());
+        http.formLogin(Customizer.withDefaults());
         http.logout(Customizer.withDefaults());
-        //http.userDetailsService(userDetailsService);
-        http.exceptionHandling(exception ->
-                exception.accessDeniedPage("/error/access-denied"));
         return http.build();
     }
 
-    // implement JWT token
-
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
     }
 
 }

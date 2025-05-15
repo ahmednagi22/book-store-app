@@ -2,15 +2,15 @@ package com.bookstore.controllers;
 
 
 import com.bookstore.dto.LoginRequestDto;
-import com.bookstore.dto.LoginResponseDto;
 import com.bookstore.dto.RegisterRequestDto;
 import com.bookstore.dto.UserResponseDto;
 import com.bookstore.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,21 +23,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public UserResponseDto registerUser(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
 
-        UserResponseDto userResponseDto = authService.register(registerRequestDto);
-
-        return userResponseDto;
-    }
-
-    @PostMapping("/login")
-    public LoginResponseDto login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-
-        LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
-
-        return loginResponseDto;
+        return  ResponseEntity.status(HttpStatus.CREATED)
+                        .body(authService.register(registerRequestDto));
 
     }
 
+
+//    @PostMapping("/login")
+//    public ResponseEntity<UserResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+//
+//        return ResponseEntity.ok(
+//                authService.login(loginRequestDto)
+//        );
+//
+//    }
+    @GetMapping("/csrf")
+    public CsrfToken getCsrfToken(HttpServletRequest request) {
+        return (CsrfToken) request.getAttribute("_csrf");
+    }
 
 }

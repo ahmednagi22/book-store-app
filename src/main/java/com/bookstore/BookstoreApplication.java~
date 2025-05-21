@@ -11,7 +11,17 @@ import static java.util.Collections.max;
 public class BookstoreApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookstoreApplication.class, args);
+
+		Scanner scanner = new Scanner(System.in);
+		String word1=scanner.nextLine();
+		String word2=scanner.nextLine();
+
+		System.out.println(max(word1,word2));
+
+
+
+
+		//SpringApplication.run(BookstoreApplication.class, args);
 	}
 
 }
